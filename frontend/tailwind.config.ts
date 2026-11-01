@@ -9,17 +9,25 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'obsidian': '#030712',
-        'navy-grey': '#0B1117',
-        'electric-cyan': '#38BDF8',
-        'indigo-accent': '#818CF8',
-        'slate-border': '#1F2937',
+        'cyber-bg': '#050505',
+        'cyber-surface': '#0A0A0B',
+        'cyber-border': '#1A1A24',
+        'neon-cyan': '#00F3FF',
+        'neon-magenta': '#FF003C',
+        'neon-purple': '#B026FF',
+        'neon-green': '#00FF66',
+        'cyber-muted': '#8892B0',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
+        sans: ['var(--font-space-grotesk)', 'sans-serif'],
+        mono: ['var(--font-jetbrains-mono)', 'monospace'],
       },
-      letterSpacing: {
-        tight: '-0.015em',
+      boxShadow: {
+        'neon-cyan': '0 0 10px rgba(0, 243, 255, 0.3)',
+        'neon-magenta': '0 0 10px rgba(255, 0, 60, 0.3)',
+      },
+      backgroundImage: {
+        'cyber-grid': 'linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px)',
       }
     },
   },

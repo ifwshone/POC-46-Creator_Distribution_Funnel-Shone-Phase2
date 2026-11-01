@@ -1,26 +1,352 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ------------------------------------------------------------------
+   DESIGN TOKENS  (Tailwind v4 reads these from @theme, not from
+   tailwind.config.ts)
+   Palette: aubergine-black canvas, champagne text, gold / aqua /
+   coral / orchid accents.
+------------------------------------------------------------------- */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+
+  --color-ink: #0d0a14;
+  --color-panel: #15101e;
+  --color-panel-2: #1c1628;
+  --color-line: rgba(239, 228, 204, 0.12);
+
+  --color-cream: #efe4cc;
+  --color-sand: #b4a98f;
+
+  --color-gold: #f5b84b;
+  --color-aqua: #3dd6c6;
+  --color-coral: #ff6b8a;
+  --color-orchid: #c9a7ff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --background: #0d0a14;
+  --foreground: #efe4cc;
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  position: relative;
+  background-color: var(--background);
+  background-image:
+    radial-gradient(900px 520px at 0% -8%, rgba(245, 184, 75, 0.14), transparent 60%),
+    radial-gradient(800px 520px at 100% 4%, rgba(201, 167, 255, 0.13), transparent 60%),
+    radial-gradient(760px 520px at 55% 115%, rgba(61, 214, 198, 0.08), transparent 60%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  /* vertical scrolling is intentionally NOT restricted */
+}
+
+/* iOS Safari mishandles fixed backgrounds, so only pin them on desktop */
+@media (min-width: 1024px) {
+  body {
+    background-attachment: fixed;
+  }
+}
+
+/* fine film grain over the whole canvas */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+::selection {
+  background: rgba(245, 184, 75, 0.35);
+  color: #fff7e3;
+}
+
+/* ------------------------------------------------------------------
+   SURFACES
+------------------------------------------------------------------- */
+.card {
+  position: relative;
+  background: linear-gradient(165deg, #19132a 0%, #130e1d 100%);
+  border: 1px solid var(--color-line);
+  border-radius: 24px;
+  box-shadow:
+    0 1px 0 rgba(255, 244, 214, 0.05) inset,
+    0 30px 60px -30px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--color-cream);
+}
+
+.icon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 10px;
+  background: rgba(245, 184, 75, 0.1);
+  border: 1px solid rgba(245, 184, 75, 0.28);
+}
+
+.eyebrow {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-sand);
+}
+
+.gradient-text {
+  background: linear-gradient(120deg, #fff0c8 0%, #f5b84b 45%, #ff8fa3 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ------------------------------------------------------------------
+   CUSTOM DROPDOWN  (replaces native <select>)
+------------------------------------------------------------------- */
+.dd {
+  --acc: #f5b84b;
+}
+
+.dd-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: #1f1830;
+  border: 1px solid var(--color-line);
+  color: var(--color-cream);
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.dd-trigger:hover {
+  border-color: color-mix(in srgb, var(--acc) 55%, transparent);
+}
+.dd-trigger:focus-visible {
+  outline: none;
+  border-color: var(--acc);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 22%, transparent);
+}
+.dd[data-open="true"] .dd-trigger {
+  border-color: var(--acc);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 22%, transparent);
+  background: #241b38;
+}
+.dd-chevron {
+  flex: none;
+  color: var(--acc);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dd[data-open="true"] .dd-chevron {
+  transform: rotate(180deg);
+}
+
+/* options expand inline, so nothing is ever clipped by the sidebar */
+.dd-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dd[data-open="true"] .dd-collapse {
+  grid-template-rows: 1fr;
+}
+.dd-collapse > div {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.dd-list {
+  margin-top: 0.5rem;
+  padding: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  border-radius: 16px;
+  background: #100b18;
+  border: 1px solid var(--color-line);
+}
+
+.dd-option {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  background: transparent;
+  text-align: left;
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.8rem;
+  color: var(--color-sand);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s, transform 0.18s;
+}
+.dd-option:hover,
+.dd-option:focus-visible {
+  outline: none;
+  background: color-mix(in srgb, var(--acc) 10%, transparent);
+  color: var(--color-cream);
+  transform: translateX(3px);
+}
+.dd-option[aria-selected="true"] {
+  background: color-mix(in srgb, var(--acc) 16%, transparent);
+  border-color: color-mix(in srgb, var(--acc) 45%, transparent);
+  color: var(--color-cream);
+}
+.dd-radio {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--color-sand);
+  display: grid;
+  place-items: center;
+  transition: border-color 0.18s;
+}
+.dd-radio::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--acc);
+  transform: scale(0);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.dd-option[aria-selected="true"] .dd-radio {
+  border-color: var(--acc);
+}
+.dd-option[aria-selected="true"] .dd-radio::after {
+  transform: scale(1);
+}
+.dd-idx {
+  margin-left: auto;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  opacity: 0.45;
+}
+
+/* ------------------------------------------------------------------
+   SYSTEM STATUS decorations
+------------------------------------------------------------------- */
+.status-tile {
+  position: relative;
+  padding: 1rem;
+  border-radius: 16px;
+  background: linear-gradient(160deg, rgba(255, 244, 214, 0.05), rgba(255, 244, 214, 0.015));
+  border: 1px solid var(--color-line);
+  transition: transform 0.25s, border-color 0.25s;
+}
+.status-tile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 184, 75, 0.4);
+}
+
+.ring-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-aqua);
+}
+.ring-dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  border: 1.5px solid var(--color-aqua);
+  animation: ring 2s ease-out infinite;
+}
+@keyframes ring {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.sig-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 18px;
+}
+.sig-bars span {
+  width: 4px;
+  border-radius: 2px;
+  background: var(--color-aqua);
+  animation: bars 1.4s ease-in-out infinite;
+}
+.sig-bars span:nth-child(1) { height: 35%; animation-delay: 0s; }
+.sig-bars span:nth-child(2) { height: 60%; animation-delay: 0.15s; }
+.sig-bars span:nth-child(3) { height: 80%; animation-delay: 0.3s; }
+.sig-bars span:nth-child(4) { height: 100%; animation-delay: 0.45s; }
+@keyframes bars {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.pulse-line {
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: trace 3.2s linear infinite;
+}
+@keyframes trace {
+  to { stroke-dashoffset: -260; }
+}
+
+/* ------------------------------------------------------------------
+   RECHARTS text (CSS beats SVG attributes, so fonts resolve reliably)
+------------------------------------------------------------------- */
+.recharts-text,
+.recharts-legend-item-text,
+.recharts-tooltip-wrapper {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace !important;
+}
+
+/* ------------------------------------------------------------------
+   SCROLLBAR
+------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0d0a14;
+}
+::-webkit-scrollbar-thumb {
+  background: #2c2340;
+  border-radius: 999px;
+  border: 2px solid #0d0a14;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f5b84b;
 }
