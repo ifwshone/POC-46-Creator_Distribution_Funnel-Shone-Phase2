@@ -219,7 +219,7 @@ export default function CreatorDistributionFunnel() {
               </h1>
               <p className="eyebrow mt-2.5 flex items-center gap-2 truncate">
                 <span className="ring-dot shrink-0" style={{ transform: "scale(0.8)" }} />
-                SYS.INTEL // INFOCREON_BATCH_02
+                SYS.INTEL // INFOCREON_INTERNSHIP_BATCH_08
               </p>
             </div>
           </div>
@@ -460,7 +460,7 @@ export default function CreatorDistributionFunnel() {
               <p>OPERATIVE: <span className="text-cream">Shone</span></p>
               <p>ID PROTOCOL: <span className="text-cream">PoC 46</span></p>
               <p>GITHUB NODE: <span className="text-cream">@ifwshone</span></p>
-              <p className="text-coral mt-2">INFOCREON INTERNSHIP SECURE CONNECTION</p>
+              <p className="text-coral mt-2">INFOCREON INTERNSHIP </p>
             </div>
           </section>
         </div>
